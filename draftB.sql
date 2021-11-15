@@ -83,3 +83,34 @@ end;
 $$;
 
 CALL fill_actor_table();
+
+
+
+CREATE OR REPLACE PROCEDURE fill_productioncompany_table()
+language plpgsql
+as $$
+declare
+	counter INT :=0;
+	str1 varchar(10);
+	str2 varchar(30);
+begin
+	
+	WHILE counter<80000 LOOP
+	
+		str1 := random_string(10);
+		str2 := random_string(30);
+		
+		INSERT INTO production_company(pc_id, name, address)
+		VALUES (counter+1, str1, str2);
+		
+		str1:='';
+		str2:='';
+		
+		counter:=counter+1;
+	
+	END LOOP;
+	
+end;
+$$;
+
+CALL fill_productioncompany_table();
