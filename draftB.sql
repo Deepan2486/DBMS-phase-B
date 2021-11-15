@@ -3,8 +3,9 @@ CREATE TABLE actor(
 	name varchar(15)
 );
 
+
 CREATE TABLE production_company(
-	pc_id INT UNIQUE,
+	pc_id INT UNIQUE PRIMARY KEY,
 	name varchar(10),
 	address varchar(30)
 
