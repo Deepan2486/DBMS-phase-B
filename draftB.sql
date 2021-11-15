@@ -34,3 +34,52 @@ CREATE TABLE casting(
 	
 	PRIMARY KEY (m_id, a_id)
 );
+
+
+--RANDOM STRING GENERATOR FUNCTION
+Create or replace function random_string(length integer) 
+returns text 
+language plpgsql 
+as $$
+declare
+  chars text[] := '{A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z,a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z}';
+  result text := '';
+  i integer := 0;
+begin
+  if length < 0 then
+    raise exception 'Given length cannot be less than 0';
+  end if;
+  for i in 1..length loop
+    result := result || chars[1+random()*(array_length(chars, 1)-1)];
+  end loop;
+  return result;
+end;
+$$;
+
+
+--FILLING THE ACTOR TABLE
+CREATE OR REPLACE PROCEDURE fill_actor_table()
+language plpgsql
+as $$
+declare
+	counter INT :=0;
+	str varchar(15);
+begin
+	
+	WHILE counter<300000 LOOP
+	
+		str := random_string(15);
+		
+		INSERT INTO actor(a_id, name)
+		VALUES (counter+1, str);
+		
+		str:='';
+		
+		counter:=counter+1;
+	
+	END LOOP;
+	
+end;
+$$;
+
+CALL fill_actor_table();
