@@ -148,11 +148,24 @@ begin
 	
 	counter:=0;
 	
-	FOR rec in (select * from movie order by random() <0.01 limit 100000) LOOP
-		UPDATE movie SET prod_company= floor(random()*(80000-501+1))+501;
+	FOR rec in (select * from movie order by random()) LOOP
+		if (counter>=100000) then
+			EXIT;
+		end if;
+		
+		UPDATE movie SET prod_company= floor(random()*(80000-501+1))+501 WHERE rec.m_id=m_id;
+		
+		counter:=counter+1;
 	END LOOP;
 	
-	--UPDATE movie set prod_company= floor(random()*(80000-501+1))+501 WHERE prod_company IS NULL;
+	
+	FOR rec1 in (select * from movie) LOOP
+		if (rec1.prod_company IS NULL) then
+			UPDATE movie SET prod_company= floor(random()*(500-1+1))+1 WHERE rec1.m_id=m_id;
+		end if;
+	END LOOP;
+	
+	
 end;
 $$;
 
