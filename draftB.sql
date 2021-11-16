@@ -17,7 +17,7 @@ CREATE TABLE movie(
 	m_id INT UNIQUE PRIMARY KEY,
 	name varchar(10),
 	year INT,
-	imbd_score numeric(3,2),
+	imdb_score numeric(3,2),
 	prod_company INT,
 	
 	CONSTRAINT fk_pid FOREIGN KEY(prod_company) REFERENCES production_company(pc_id)
@@ -136,7 +136,7 @@ begin
 		year:= floor(random()*(2000-1900+1))+1900;
 		imdb := random()*(5-1)+1;
 		
-		INSERT INTO movie(m_id, name, year, imbd_score)
+		INSERT INTO movie(m_id, name, year, imdb_score)
 		VALUES (counter+1, str, year, imdb);
 		
 		str:='';
@@ -224,6 +224,5 @@ CREATE INDEX movie_imdb on movie USING btree(imdb_score);
 CREATE INDEX movie_year on movie USING btree(year);
 CREATE INDEX casting_mid on casting USING btree(m_id);
 CREATE INDEX casting_aid on casting USING btree(a_id);
-CREATE INDEX movie_pcid on movie USING btree(pc_id);
-
+CREATE INDEX movie_pcid on movie USING btree(prod_company);
 
