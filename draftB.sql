@@ -114,3 +114,47 @@ end;
 $$;
 
 CALL fill_productioncompany_table();
+
+
+--STILL Unfinished
+
+CREATE OR REPLACE PROCEDURE fill_movie_table()
+language plpgsql
+as $$
+declare
+	counter INT :=0;
+	str varchar(10);
+	year INT;
+	imdb numeric(3,2);
+	rec RECORD;
+	rec1 RECORD;
+begin
+
+	WHILE counter<1000000 LOOP
+	
+		str := random_string(10);
+		year:= floor(random()*(2000-1900+1))+1900;
+		imdb := random()*(5-1)+1;
+		
+		INSERT INTO movie(m_id, name, year, imbd_score)
+		VALUES (counter+1, str, year, imdb);
+		
+		str:='';
+		
+		counter:=counter+1;
+	
+	END LOOP;
+	
+	
+	counter:=0;
+	
+	FOR rec in (select * from movie order by random() <0.01 limit 100000) LOOP
+		UPDATE movie SET prod_company= floor(random()*(80000-501+1))+501;
+	END LOOP;
+	
+	--UPDATE movie set prod_company= floor(random()*(80000-501+1))+501 WHERE prod_company IS NULL;
+end;
+$$;
+
+
+CALL fill_movie_table();
