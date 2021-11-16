@@ -205,15 +205,17 @@ begin
 		counter := counter+1;
 	END LOOP;
 	
+	ALTER TABLE casting ADD CONSTRAINT fk_mid FOREIGN KEY(m_id) REFERENCES movie(m_id);
+	ALTER TABLE casting ADD CONSTRAINT fk_aid FOREIGN KEY(a_id) REFERENCES actor(a_id);
+	ALTER TABLE casting ADD CONSTRAINT casting_pkey PRIMARY KEY(m_id, a_id);
+	ALTER TABLE casting set LOGGED;
+	
 end;
 $$;
 
 CALL fill_casting_table();
 
-ALTER TABLE casting ADD CONSTRAINT fk_mid FOREIGN KEY(m_id) REFERENCES movie(m_id);
-ALTER TABLE casting ADD CONSTRAINT fk_aid FOREIGN KEY(a_id) REFERENCES actor(a_id);
-ALTER TABLE casting ADD CONSTRAINT casting_pkey PRIMARY KEY(m_id, a_id);
-ALTER TABLE casting set LOGGED;
+
 
 
 CREATE INDEX actor_aid on actor USING btree(a_id);
