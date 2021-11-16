@@ -191,18 +191,18 @@ begin
 		if (actor_count>= (4*950000)) then
 			
 			--fill actors with 10000<id<300000
-			FOR rec in () LOOP
+			FOR rec in (select generate_series(10000,300000) order by random() limit 4) LOOP
 				
-				random_actor := rec.a_id;
+				random_actor := rec.generate_series;
 				
 				INSERT into casting(m_id, a_id) VALUES (counter+1, random_actor);
 				actor_count :=actor_count+1;
 			END LOOP;
 	
 		else
-			FOR rec in (select * from actor where a_id<10000 order by random() limit 4) LOOP
+			FOR rec in (select generate_series(1,10000) order by random() limit 4) LOOP
 				
-				random_actor := rec.a_id;
+				random_actor := rec.generate_series;
 				
 				INSERT into casting(m_id, a_id) VALUES (counter+1, random_actor);
 				actor_count:=actor_count+1;
