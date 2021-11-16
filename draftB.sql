@@ -182,36 +182,35 @@ declare
 	counter INT:=0;
 	rec RECORD;
 	random_actor INT;
-	actor_count INT :=0;
+	temp INT:=0;
 	
 begin
+
+	ALTER TABLE casting DROP CONSTRAINT fk_aid;
+	ALTER TABLE casting DROP CONSTRAINT fk_mid;
+	ALTER TABLE casting DROP CONSTRAINT casting_pkey;
+	ALTER TABLE casting SET unlogged;
 	
 	WHILE counter<1000000 LOOP
+	
+		FOR rec in (select num from generate_series(1,10000) as s(num) order by random()) LOOP
+			if(temp>=4) then
+				exit;
+			end if;
+			INSERT INTO casting(m_id, a_id) values (counter+1, rec.num);
+			temp:=temp+1;
+		end loop;
 		
-		if (actor_count>= (4*950000)) then
-			
-			--fill actors with 10000<id<300000
-			FOR rec in (select generate_series(10000,300000) order by random() limit 4) LOOP
-				
-				random_actor := rec.generate_series;
-				
-				INSERT into casting(m_id, a_id) VALUES (counter+1, random_actor);
-				actor_count :=actor_count+1;
-			END LOOP;
-	
-		else
-			FOR rec in (select generate_series(1,10000) order by random() limit 4) LOOP
-				
-				random_actor := rec.generate_series;
-				
-				INSERT into casting(m_id, a_id) VALUES (counter+1, random_actor);
-				actor_count:=actor_count+1;
-			END LOOP;
-		end if;
-	
-		counter:=counter+1;
+		temp:=0;
+		counter := counter+1;
 	END LOOP;
+	
 end;
 $$;
 
 CALL fill_casting_table();
+
+ALTER TABLE casting ADD CONSTRAINT fk_mid FOREIGN KEY(m_id) REFERENCES movie(m_id);
+ALTER TABLE casting ADD CONSTRAINT fk_aid FOREIGN KEY(a_id) REFERENCES actor(a_id);
+ALTER TABLE casting ADD CONSTRAINT casting_pkey PRIMARY KEY(m_id, a_id);
+ALTER TABLE casting set LOGGED;
