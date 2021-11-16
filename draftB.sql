@@ -226,3 +226,22 @@ CREATE INDEX casting_mid on casting USING btree(m_id);
 CREATE INDEX casting_aid on casting USING btree(a_id);
 CREATE INDEX movie_pcid on movie USING btree(prod_company);
 
+
+------------------------------------------------------------------------------------------------------------------------
+->> What does "Bitmap Heap Scan" phase do?
+
+
+A plain indexscan fetches one tuple-pointer at a time from the index,
+and immediately visits that tuple in the table.  A bitmap scan fetches
+all the tuple-pointers from the index in one go, sorts them using an
+in-memory "bitmap" data structure, and then visits the table tuples in
+physical tuple-location order.  The bitmap scan improves locality of
+reference to the table at the cost of more bookkeeping overhead to
+manage the "bitmap" data structure --- and at the cost that the data
+is no longer retrieved in index order, which doesn't matter for your
+query but would matter if you said ORDER BY.
+
+
+
+
+
