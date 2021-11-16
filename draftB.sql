@@ -171,3 +171,47 @@ $$;
 
 
 CALL fill_movie_table();
+
+delete from casting;
+
+
+CREATE OR REPLACE PROCEDURE fill_casting_table()
+language plpgsql
+as $$
+declare
+	counter INT:=0;
+	rec RECORD;
+	random_actor INT;
+	actor_count INT :=0;
+	
+begin
+	
+	WHILE counter<1000000 LOOP
+		
+		if (actor_count>= (4*950000)) then
+			
+			--fill actors with 10000<id<300000
+			FOR rec in () LOOP
+				
+				random_actor := rec.a_id;
+				
+				INSERT into casting(m_id, a_id) VALUES (counter+1, random_actor);
+				actor_count :=actor_count+1;
+			END LOOP;
+	
+		else
+			FOR rec in (select * from actor where a_id<10000 order by random() limit 4) LOOP
+				
+				random_actor := rec.a_id;
+				
+				INSERT into casting(m_id, a_id) VALUES (counter+1, random_actor);
+				actor_count:=actor_count+1;
+			END LOOP;
+		end if;
+	
+		counter:=counter+1;
+	END LOOP;
+end;
+$$;
+
+CALL fill_casting_table();
