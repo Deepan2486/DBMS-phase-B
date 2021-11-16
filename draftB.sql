@@ -214,3 +214,14 @@ ALTER TABLE casting ADD CONSTRAINT fk_mid FOREIGN KEY(m_id) REFERENCES movie(m_i
 ALTER TABLE casting ADD CONSTRAINT fk_aid FOREIGN KEY(a_id) REFERENCES actor(a_id);
 ALTER TABLE casting ADD CONSTRAINT casting_pkey PRIMARY KEY(m_id, a_id);
 ALTER TABLE casting set LOGGED;
+
+
+CREATE INDEX actor_aid on actor USING btree(a_id);
+CREATE INDEX movie_mid on movie USING btree(m_id);
+CREATE INDEX movie_imdb on movie USING btree(imdb_score);
+CREATE INDEX movie_year on movie USING btree(year);
+CREATE INDEX casting_mid on casting USING btree(m_id);
+CREATE INDEX casting_aid on casting USING btree(a_id);
+CREATE INDEX movie_pcid on movie USING btree(pc_id);
+
+
